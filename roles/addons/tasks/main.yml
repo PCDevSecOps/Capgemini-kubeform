@@ -24,6 +24,7 @@
     filename: "{{ kubernetes_addons_dir }}"
     state: present
   run_once: true
+  ignore_errors: yes
   tags:
     - addons
     - kubernetes

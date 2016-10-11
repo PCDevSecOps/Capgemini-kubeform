@@ -2,11 +2,11 @@ variable "do_token" {}
 variable "organization" { default = "kubeform" }
 variable "region" { default = "lon1" }
 variable "masters" { default = "3" }
-variable "workers" { default = "1" }
+variable "workers" { default = "2" }
 variable "edge-routers" { default = "1" }
-variable "master_instance_type" { default = "512mb" }
-variable "worker_instance_type" { default = "512mb" }
-variable "edge-router_instance_type" { default = "512mb" }
+variable "master_instance_type" { default = "8gb" }
+variable "worker_instance_type" { default = "8gb" }
+variable "edge-router_instance_type" { default = "8gb" }
 variable "etcd_discovery_url_file" { default = "etcd_discovery_url.txt" }
 
 variable "coreos_image" { default = "coreos-stable" }
