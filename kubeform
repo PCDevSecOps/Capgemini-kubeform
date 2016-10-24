@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+up(){
+	pushd terraform/$PROVIDER
+	terraform apply
+	popd
+	export TF_VAR_STATE_ROOT=terraform/$PROVIDER
+	ssh-add terraform/$PROVIDER/id_rsa
+	ansible-playbook --inventory-file=inventory/ site.yml
+}
+
+down(){
+	pushd terraform/$PROVIDER
+	terraform destroy
+	popd
+}
+
+$@
+exit 0
