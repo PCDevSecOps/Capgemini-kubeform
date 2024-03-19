@@ -31,8 +31,9 @@ resource "aws_instance" "master" {
   depends_on        = ["aws_instance.bastion"]
   user_data         = "${data.template_file.master_cloud_init.rendered}"
   tags = {
-    Name = "kube-master-${count.index}"
-    role = "masters"
+    Name      = "kube-master-${count.index}"
+    role      = "masters"
+    yor_trace = "16255ed0-7d70-4793-9f30-d387d5770bba"
   }
   connection {
     user                = "core"

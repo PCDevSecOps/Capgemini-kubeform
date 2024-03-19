@@ -24,20 +24,21 @@ data "template_file" "worker_cloud_init" {
 }
 
 resource "aws_instance" "worker" {
-  instance_type        = "${var.worker_instance_type}"
-  ami                  = "${module.worker_ami.ami_id}"
-  iam_instance_profile = "${module.iam.worker_profile_name}"
-  count                = "${var.workers}"
-  key_name             = "${module.aws-keypair.keypair_name}"
-  subnet_id            = "${element(module.public_subnet.subnet_ids, count.index)}"
-  source_dest_check    = false
+  instance_type          = "${var.worker_instance_type}"
+  ami                    = "${module.worker_ami.ami_id}"
+  iam_instance_profile   = "${module.iam.worker_profile_name}"
+  count                  = "${var.workers}"
+  key_name               = "${module.aws-keypair.keypair_name}"
+  subnet_id              = "${element(module.public_subnet.subnet_ids, count.index)}"
+  source_dest_check      = false
   vpc_security_group_ids = ["${module.sg-default.security_group_id}"]
-  depends_on           = ["aws_instance.master"]
-  user_data            = "${data.template_file.worker_cloud_init.rendered}"
+  depends_on             = ["aws_instance.master"]
+  user_data              = "${data.template_file.worker_cloud_init.rendered}"
   tags = {
-    Name   = "kube-worker-${count.index}"
-    role   = "workers"
-    region = "${var.region}"
+    Name      = "kube-worker-${count.index}"
+    role      = "workers"
+    region    = "${var.region}"
+    yor_trace = "63a7824f-0487-45f8-be88-44e90275088c"
   }
   ebs_block_device {
     device_name           = "/dev/xvdb"
@@ -45,8 +46,8 @@ resource "aws_instance" "worker" {
     delete_on_termination = true
   }
   connection {
-    user                = "core"
-    private_key         = "${tls_private_key.ssh.private_key_pem}"
+    user        = "core"
+    private_key = "${tls_private_key.ssh.private_key_pem}"
   }
   provisioner "file" {
     source      = "../../scripts/coreos"
