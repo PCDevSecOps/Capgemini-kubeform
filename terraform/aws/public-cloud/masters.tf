@@ -24,23 +24,24 @@ data "template_file" "master_cloud_init" {
 }
 
 resource "aws_instance" "master" {
-  instance_type        = "${var.master_instance_type}"
-  ami                  = "${module.master_ami.ami_id}"
-  iam_instance_profile = "${module.iam.master_profile_name}"
-  count                = "${var.masters}"
-  key_name             = "${module.aws-keypair.keypair_name}"
-  subnet_id            = "${element(module.public_subnet.subnet_ids, count.index)}"
-  source_dest_check    = false
+  instance_type          = "${var.master_instance_type}"
+  ami                    = "${module.master_ami.ami_id}"
+  iam_instance_profile   = "${module.iam.master_profile_name}"
+  count                  = "${var.masters}"
+  key_name               = "${module.aws-keypair.keypair_name}"
+  subnet_id              = "${element(module.public_subnet.subnet_ids, count.index)}"
+  source_dest_check      = false
   vpc_security_group_ids = ["${module.sg-default.security_group_id}"]
-  user_data            = "${data.template_file.master_cloud_init.rendered}"
+  user_data              = "${data.template_file.master_cloud_init.rendered}"
   tags = {
-    Name   = "kube-master-${count.index}"
-    role   = "masters"
-    region = "${var.region}"
+    Name      = "kube-master-${count.index}"
+    role      = "masters"
+    region    = "${var.region}"
+    yor_trace = "8cd2f50d-9135-4af1-8021-08461e046c37"
   }
   connection {
-    user                = "core"
-    private_key         = "${tls_private_key.ssh.private_key_pem}"
+    user        = "core"
+    private_key = "${tls_private_key.ssh.private_key_pem}"
   }
   provisioner "file" {
     source      = "../../scripts/coreos"
@@ -58,10 +59,10 @@ resource "aws_instance" "master" {
 }
 
 module "master_elb" {
-  source             = "../elb"
-  security_groups    = "${module.sg-default.security_group_id}"
-  instances          = [ "${aws_instance.master.*.id}" ]
-  subnets            = [ "${module.public_subnet.subnet_ids}" ]
+  source          = "../elb"
+  security_groups = "${module.sg-default.security_group_id}"
+  instances       = ["${aws_instance.master.*.id}"]
+  subnets         = ["${module.public_subnet.subnet_ids}"]
 }
 
 output "master_ips" {

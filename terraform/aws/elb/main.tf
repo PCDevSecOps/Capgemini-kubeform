@@ -43,6 +43,9 @@ resource "aws_elb" "kube_master" {
   tags {
     Name = "${var.elb_name}"
   }
+  tags = {
+    yor_trace = "9e65e7aa-0655-4407-9e43-c2d16ba20c60"
+  }
 }
 
 # outputs

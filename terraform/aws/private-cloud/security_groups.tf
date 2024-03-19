@@ -52,4 +52,7 @@ resource "aws_security_group" "bastion" {
   tags {
     Name = "kube-bastion-sg"
   }
+  tags = {
+    yor_trace = "966168ef-a8c9-4374-bb9d-cc9f2cf0cdc2"
+  }
 }

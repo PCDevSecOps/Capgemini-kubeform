@@ -34,6 +34,9 @@ resource "aws_security_group" "default" {
   tags {
     Name = "kube-default-sg"
   }
+  tags = {
+    yor_trace = "2348ab62-b0a7-417f-9f9e-830aa443dd4b"
+  }
 }
 
 # output variables

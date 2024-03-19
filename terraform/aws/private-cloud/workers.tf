@@ -30,13 +30,14 @@ resource "aws_instance" "worker" {
   key_name          = "${module.aws-keypair.keypair_name}"
   source_dest_check = false
   # @todo - fix this as this only allows 3 workers maximum (due to splittingo on the count variable)
-  subnet_id         = "${element(split(",", module.vpc.private_subnets), count.index)}"
-  security_groups   = ["${module.sg-default.security_group_id}"]
-  depends_on        = ["aws_instance.bastion", "aws_instance.master"]
-  user_data         = "${data.template_file.master_cloud_init.rendered}"
+  subnet_id       = "${element(split(",", module.vpc.private_subnets), count.index)}"
+  security_groups = ["${module.sg-default.security_group_id}"]
+  depends_on      = ["aws_instance.bastion", "aws_instance.master"]
+  user_data       = "${data.template_file.master_cloud_init.rendered}"
   tags = {
-    Name = "kube-worker-${count.index}"
-    role = "workers"
+    Name      = "kube-worker-${count.index}"
+    role      = "workers"
+    yor_trace = "1e7037a6-d771-4ed4-8ed9-c18155cf4650"
   }
   connection {
     user                = "core"
